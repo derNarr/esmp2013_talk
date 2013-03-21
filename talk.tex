@@ -38,6 +38,8 @@
 \renewcommand{\emph}[1]{\color{red}#1 \color{black}}
 
 
+
+
 \begin{document}
 
 \maketitle
@@ -46,6 +48,49 @@
   \frametitle{Outline}
   \tableofcontents
 \end{frame}
+
+\begin{frame}
+  \frametitle{Todos}
+  \begin{itemize}
+      \item focus only on SJ3 task
+      \item show SJ2 and TOJ in the end (and there only plots)
+  \end{itemize}
+  \begin{columns}[t]
+      \begin{column}{0.5\textwidth}
+  \begin{block}{Micha}
+      \begin{itemize}
+          \item fit data to IICM
+          \item slides Motivation + SJ3 task
+      \end{itemize}
+  \end{block}
+  \begin{block}{Marilisa}
+      \begin{itemize}
+          \item fit data to IICM
+          \item slides IICM
+      \end{itemize}
+  \end{block}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+  \begin{block}{Michael}
+      \begin{itemize}
+          \item fit data to IICM
+          \item slides IDM
+      \end{itemize}
+  \end{block}
+  \begin{block}{Jan}
+      \begin{itemize}
+          \item Simulate data
+      \end{itemize}
+  \end{block}
+  \begin{block}{Tino}
+      \begin{itemize}
+          \item Simulate data
+      \end{itemize}
+  \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 \begin{frame}
   \frametitle{Todos}
@@ -135,11 +180,19 @@
 \section{Fitting the IICM to IDM Data}
 \label{sec:fitting}
 
+
+
 \subsection{Model Selection}
 
 \begin{frame}
   \frametitle{Model Selection}
-  Restricting model parameters in the IICM.
+  \begin{itemize}
+          \item version of ICM 3 of Sternberg and Knoll (1973).
+          \item  Judgment of temporal order or synchrony is determined by a ternary decision rule applied to the arrival time difference between the 2 signals.  
+          \item  Signals from 2 stimuli arrive at a central mechanism with 2 randomly distributed arrival latencies T1 and T2.
+      \end{itemize}
+      $ g_i(t) = \lambda_i exp[-\lambda(t-(\Delta t_i + \tau ))]  $
+ 
 
   \begin{itemize}
       \item Parameter..
