@@ -162,12 +162,101 @@
 
 
 
+\begin{frame}
+  \frametitle{3D IDM}
+  Extend the Ising decision model to three dimensions.
 
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{./figs/decision_space_3d.pdf}
+    \caption{Three dimensional decision space.}
+    \label{fig:3dspace}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Video}
+  Video :)
+\end{frame}
+
+\begin{frame}
+  \frametitle{3D IDM Free Energy}
+  We have the free energy from the two dimensional Ising decision model:
+
+\begin{equation*}
+    \begin{split}
+    W^-_{12} y_{1} y_{2} - W^+_{1} y_{1}^{2} - W^+_{2} y_{2}^{2} - y_{1}
+    (B_{1} - \Theta_{1}) - y_{2} (B_{2} - \Theta_{2})\\
+    + \beta \cdot [N_{1} (y_{1} \operatorname{log}(y_{1}) + (- y_{1} + 1)
+    \operatorname{log}(- y_{1} + 1))\\
+    + N_{2} (y_{2} \operatorname{log}(y_{2}) + (- y_{2} + 1)
+    \operatorname{log}(- y_{2} + 1))]
+    \end{split}
+\end{equation*}
+
+\begin{equation*}
+    \begin{split}
+    W^-_{12} y_{1} y_{2} + W^-_{13} y_{1} y_{3} + W^-_{23} y_{2} y_{3} -
+    W^+_{1} y_{1}^{2} - W^+_{2} y_{2}^{2} - W^+_{3} y_{3}^{2} \\
+    - y_{1} (B_{1} - \Theta_{1}) - y_{2} (B_{2} -
+    \Theta_{2}) - y_{3} (B_{3} - \Theta_{3}) \\
+    + \beta \cdot [N_{1} (y_{1} \operatorname{log}(y_{1}) + (- y_{1} + 1)
+    \operatorname{log}(- y_{1} + 1))\\
+    + N_{2} (y_{2} \operatorname{log}(y_{2}) + (- y_{2} + 1)
+    \operatorname{log}(- y_{2} + 1))\\
+    + N_{3} (y_{3} \operatorname{log}(y_{3}) + (- y_{3} +
+    1) \operatorname{log}(- y_{3} + 1))]
+    \end{split}
+\end{equation*}
+\end{frame}
 
 \section{Simulations}
 \label{sec:simu}
 
+\begin{frame}[fragile]
+  \frametitle{Going Python}
+  \begin{verbatim}
+from sympy import symbols, log
 
+Wplus1, Wplus2, Wplus3  = symbols("Wplus1, Wplus2, Wplus3")
+Wminus12, Wminus13, Wminus23  = symbols(
+                            "Wminus12, Wminus13, Wminus23")
+B1, B2, B3 = symbols("B1, B2, B3")
+THETA1, THETA2, THETA3 = symbols("THETA1, THETA2, THETA3")
+beta = symbols("beta")
+y1, y2, y3 = symbols("y1, y2, y3")
+N1, N2, N3 = symbols("N1, N2, N3")
+
+F_IDM = (-Wplus1*y1**2 - Wplus2*y2**2 - Wplus3*y3**2
+    + Wminus12*y1*y2 + Wminus13*y1*y3 + Wminus23*y2*y3
+    - (B1 - THETA1)*y1 - (B2 - THETA2)*y2 - (B3 - THETA3)*y3
+    + 1/beta * (N1*(y1*log(y1) + (1-y1)*log(1-y1))
+                + N2*(y2*log(y2) + (1-y2)*log(1-y2))
+                + N3*(y3*log(y3) + (1-y3)*log(1-y3))))
+  \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Going Python}
+  \begin{verbatim}
+>>> F_IDM.diff(y1)
+-B1 + N1*(log(y1) - log(-y1 + 1))/beta + THETA1 + Wminus12*y2
++ Wminus13*y3 - 2*Wplus1*y1
+>>> F_IDM.diff(y2)
+-B2 + N2*(log(y2) - log(-y2 + 1))/beta + THETA2 + Wminus12*y1
++ Wminus23*y3 - 2*Wplus2*y2
+>>> F_IDM.diff(y3)
+-B3 + N3*(log(y3) - log(-y3 + 1))/beta + THETA3 + Wminus13*y1
++ Wminus23*y2 - 2*Wplus3*y3
+
+>>> from sympy import latex
+>>> latex(F_IDM.diff(y1))
+  \end{verbatim}
+$$- B_{1} + \frac{N_{1} (\operatorname{log}(y_{1}) -
+\operatorname{log}(- y_{1} + 1))}{\beta} + \Theta_{1} +
+W^-_{12} y_{2} + W^-_{13} y_{3} - 2 W^+_{1} y_{1}$$
+and so on...
+\end{frame}
 
 
 \section{Integrated Independent Channels Model (IICM)}
