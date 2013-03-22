@@ -269,27 +269,6 @@ F_{IDM}(y) = &-W^{+} + y_1^2 - W^+ y_1 y_2 - (B_1 - \Theta) y_1 - (B_2 - \Theta)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{Goal}
-  \begin{columns}
-  \begin{column}{0.30\textwidth}
-  \includegraphics[width=0.7\textwidth]{figs/checkbox-checked.png}
-  \end{column}
-  \begin{column}{0.70\textwidth}
-  With an extended IDM model, simulate human behaviour in a three-alternative temporal judgment task
-  \end{column}
-  \end{columns}
-  \begin{columns}
-  \begin{column}{0.30\textwidth}
-  \includegraphics[width=0.7\textwidth]{figs/checkbox-unchecked.png}
-  \end{column}
-  \begin{column}{0.70\textwidth}
-  Fit Independent-Channels Model (Miguel \& Rocio) to our simulated data 
-  \end{column}
-  \end{columns}
-\end{frame}
-
-
-\begin{frame}
   \frametitle{3D IDM}
   Extend the Ising decision model to three dimensions.
 
@@ -364,27 +343,141 @@ F_IDM = (-Wplus1*y1**2 - Wplus2*y2**2 - Wplus3*y3**2
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Going Python}
+  \frametitle{Euler–Maruyama method}
+  Walk through the 3D free energy landscape with a stochastic walk
+  (diffusion model like).
+  \begin{verbatim}
+import random
+def simulate(y_start, t_begin=0.0, t_end=0.002, dt=.0001,
+            Bs=(8000, 8000, 8100)):
+    #...
+    for i in xrange(1,Nt):
+        y[i] = (y[i-1] + dt*drift_rate(y[i-1], Bs) +
+                sigma*sqrtdt*np.array((random.gauss(0,1),
+                                    random.gauss(0,1),
+                                    random.gauss(0,1))))
+    #...
+  \end{verbatim}
+  \begin{itemize}
+      \item need \emph{drift rate}
+      \item set \emph{all parameters} except Bs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Derivatives}
+In order to get the drift rate we need the steepness of the free energy
+landscape.
+$$\frac{\partial F_{IDM}}{\partial y_1} =$$
   \begin{verbatim}
 >>> F_IDM.diff(y1)
 -B1 + N1*(log(y1) - log(-y1 + 1))/beta + THETA1 + Wminus12*y2
 + Wminus13*y3 - 2*Wplus1*y1
->>> F_IDM.diff(y2)
--B2 + N2*(log(y2) - log(-y2 + 1))/beta + THETA2 + Wminus12*y1
-+ Wminus23*y3 - 2*Wplus2*y2
->>> F_IDM.diff(y3)
--B3 + N3*(log(y3) - log(-y3 + 1))/beta + THETA3 + Wminus13*y1
-+ Wminus23*y2 - 2*Wplus3*y3
 
 >>> from sympy import latex
 >>> latex(F_IDM.diff(y1))
   \end{verbatim}
-$$- B_{1} + \frac{N_{1} (\operatorname{log}(y_{1}) -
+  $$- B_{1} + \frac{N_{1} (\operatorname{log}(y_{1}) -
 \operatorname{log}(- y_{1} + 1))}{\beta} + \Theta_{1} +
 W^-_{12} y_{2} + W^-_{13} y_{3} - 2 W^+_{1} y_{1}$$
-and so on...
+Analogous for $\frac{\partial F_{IDM}}{\partial y_2}$ and $\frac{\partial
+F_{IDM}}{\partial y_3}$
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Smart Guessing}
+  Thanks to Steijn we randomly smart guessed for an evening and find a good
+  parameter set.
+  \begin{verbatim}
+param = {"Wplus1": 52000,
+     "Wplus2": 52000,
+     "Wplus3": 52000,
+     "Wminus12": 12000,
+     "Wminus13": 12000,
+     "Wminus23": 12000,
+     "THETA1": 52500,
+     "THETA2": 52500,
+     "THETA3": 52500,
+     "N1": 1000,
+     "N2": 1000,
+     "N3": 1000,
+     "beta": 1/24}
+F_IDM.subs(param)
+  \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Smart Guessing}
+  Thanks to Steijn we randomly smart guessed for an evening and find a good
+  parameter set.
+  \begin{verbatim}
+param = {"Wplus1": 52000,
+     "Wplus2": 52000,
+     "Wplus3": 52000,
+     "Wminus12": 12000,
+     "Wminus13": 12000,
+     "Wminus23": 12000,
+     "THETA1": 52500,
+     "THETA2": 52500,
+     "THETA3": 52500,
+     "N1": 1000,
+     "N2": 1000,
+     "N3": 1000,
+     "beta": 1/24}
+F_IDM.subs(param)
+  \end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Something went wrong}
+  \begin{itemize}
+      \item Now we could run some simulations (but they were very slow and
+          consumed much of the memory).
+      \item Remember we wanted to mimic with systematically differing Bs
+          human response behaviour to an SJ3 task.
+      \item Trying to run a bulk of simulations during night failed due to
+          memory consumption.
+      \item But "Captain Flieg" and a short night later...
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ballmer Peak}
+  \begin{figure}[h]
+      \includegraphics[width=100mm]{figs/ballmer_peak_mod.png}
+      \caption{Ballmer Peak (modified). xkcd.com/323/ (cc)-by-nc}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Video2}
+  Video :)
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Goal}
+  \begin{columns}
+  \begin{column}{0.30\textwidth}
+  \includegraphics[width=0.7\textwidth]{figs/checkbox-checked.png}
+  \end{column}
+  \begin{column}{0.70\textwidth}
+  With an extended IDM model, simulate human behaviour in a three-alternative temporal judgment task
+  \end{column}
+  \end{columns}
+  \begin{columns}
+  \begin{column}{0.30\textwidth}
+  \includegraphics[width=0.7\textwidth]{figs/checkbox-unchecked.png}
+  \end{column}
+  \begin{column}{0.70\textwidth}
+  Fit Independent-Channels Model (Miguel \& Rocio) to our simulated data 
+  \end{column}
+  \end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Tino end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Integrated Independent-Channels Model (ICM)}
 \label{sec:icm}
